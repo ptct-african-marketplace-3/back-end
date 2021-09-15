@@ -17,4 +17,10 @@ app.use(cors());
 app.use("/api/items", itemsRouter);
 app.use("/api/users", usersRouter);
 
+app.get("/", (req, res) => {
+    res.json({
+        message: "Welcome to the PTCT-African-Marketplace-3 API"
+    })
+})
+
 module.exports = app;
