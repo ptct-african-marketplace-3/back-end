@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const itemsRouter = require("./items/items-router");
 const usersRouter = require("./users/users-router");
+const authRouter = require("./auth/auth-router");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use("/api/items", itemsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
 
 app.get("/", (req, res) => {
     res.json({

@@ -21,3 +21,39 @@ router.post("/register", (req, res) =>{
         })
     })
 })
+
+router.post('/login', checkPayload, checkUsernameExists, (req, res) => {
+    
+let { username, password } = req.body;
+ 
+user.findByUserName(username) 
+  .then((users) => { 
+    if (users && bcrypt.compareSync(password, users.password)) {
+      console.log("credentials are correct")
+      const token = makeToken(users) 
+        res.status(200).json({
+            message: `welcome ${users.userName}`,
+            token: token
+        });
+    } else {
+      res.status(401).json({ message: 'Invalid Credentials' });
+    }
+  })
+  .catch((err) => {
+    res.status(500).json(err)
+  });
+});
+
+function makeToken(users){
+    const payload = {
+      subject:users.ownerId,
+      username:users.userName
+    }
+    const options = {
+      expiresIn: "86400s"
+    }
+    return jwt.sign(payload, JWT_SECRET, options)
+}  
+ 
+
+module.exports = router;
