@@ -33,7 +33,7 @@ const db = require("../../data/dbConfig")
 const getAllItems = () => {
   return db("owners as o")
   .join("items as i", "o.ownerId", "i.ownerId")
-  .select("o.userName", "i.itemName", "i.itemDescription", "i.itemPrice", "i.itemId", "o.location")
+  .select("o.userName", "i.itemName", "i.itemDescription", "i.itemPrice", "i.itemId", "o.location", "o.ownerId")
 
 }
 
