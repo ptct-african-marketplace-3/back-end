@@ -8,7 +8,15 @@ function findByUserId(ownerId){
     return db("owners as o").select("*").where("ownerId", ownerId).first()
 }
 
+function findByUserName(userName) {
+    return db("owners")
+        .select("*")
+        .where("userName", userName)
+        .first()
+}
+
 module.exports = {
     add,
-    findByUserId
+    findByUserId,
+    findByUserName
 }
