@@ -1,12 +1,19 @@
 const express = require("express");
 const router = express.Router();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const user = require("./auth-model");
+const { checkForDuplicates,
+  checkPayload,
+  checkUsernameExists
+} = require('../middleware/middleware.js');
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-router.post("/register", (req, res) =>{
+router.post("/register", checkPayload, checkForDuplicates, (req, res) =>{
     let users = req.body;
     const rounds = process.env.ROUNDS || 10
     const hash = bcrypt.hashSync(users.password, rounds)

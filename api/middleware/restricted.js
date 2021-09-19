@@ -3,7 +3,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 
 
-module.exports = (req, res, next) => {
+const restricted = (req, res, next) => {
   const token = req.headers.authorization
 
   if(!token){
@@ -19,3 +19,5 @@ module.exports = (req, res, next) => {
     })
   }
 };
+
+module.exports = { restricted };
