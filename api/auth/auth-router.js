@@ -51,7 +51,8 @@ Auth.findByUserName(userName)
       const token = makeToken(users) 
         res.status(200).json({
             message: `Welcome ${users.userName}`,
-            token: token
+            token: token,
+            ownerId: users.ownerId 
         });
     } else {
       res.status(401).json({ message: 'Invalid Credentials' });
