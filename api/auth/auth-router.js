@@ -4,44 +4,53 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const user = require("./auth-model");
+const Auth = require("./auth-model");
 const { checkForDuplicates,
   checkPayload,
   checkUsernameExists
 } = require('../middleware/middleware.js');
+const { restricted } = require('../middleware/restricted');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
-router.post("/register", checkPayload, checkForDuplicates, (req, res) =>{
-    let users = req.body;
-    const rounds = process.env.ROUNDS || 10
-    const hash = bcrypt.hashSync(users.password, rounds)
-    users.password = hash;
+router.post("/register", checkPayload, checkForDuplicates, async(req, res) => {
+  const newUser = req.body
 
-    user.add(users).then(saved => res.status(201).json({
-        message: "success",
-        newUser: saved
-    }))
-    .catch(err => {
-        res.status(500).json({
-            message: "failed",
-            error: err
-        })
-    })
+  try{
+    const hash = bcrypt.hashSync(newUser.password, 10);
+    newUser.password = hash;
+    const createdUser = await Auth.add(newUser);
+
+    console.log(createdUser)
+
+    if(!createdUser){
+      res.status(500).json({
+        message: "User not created"
+      })
+    }else{
+      res.status(201).json(createdUser)
+    }
+  }catch(err){
+    res.status(500).json({
+      status: "Failed",
+      message: "Failed to create user.",
+      error: err.message
+  })
+  }
 })
 
 router.post('/login', checkPayload, checkUsernameExists, (req, res) => {
     
-let { username, password } = req.body;
+let { userName, password } = req.body;
  
-user.findByUserName(username) 
+Auth.findByUserName(userName) 
   .then((users) => { 
     if (users && bcrypt.compareSync(password, users.password)) {
       console.log("credentials are correct")
       const token = makeToken(users) 
         res.status(200).json({
-            message: `welcome ${users.userName}`,
+            message: `Welcome ${users.userName}`,
             token: token
         });
     } else {
@@ -49,7 +58,7 @@ user.findByUserName(username)
     }
   })
   .catch((err) => {
-    res.status(500).json(err)
+    res.status(500).json(err.message)
   });
 });
 

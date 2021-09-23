@@ -1,9 +1,10 @@
-const users = require("../auth/auth-model");
+const Auth = require("../auth/auth-model");
+const bcrypt = require("bcryptjs");
 
 const checkForDuplicates = async (req, res, next) => {
     try {
-        const username = req.body.userName;
-        const user = await users.findByUserName(username)
+        const userName = req.body.userName;
+        const user = await Auth.findByUserName(userName)
         if (user) {
             return res.status(400).json({
                 message: "Username is already taken. Please use another username.",
@@ -17,10 +18,9 @@ const checkForDuplicates = async (req, res, next) => {
 };
 
 const checkPayload = (req, res, next) => {
-    console.log("in the checkPayload")
-      const username = req.body.userName;
+      const userName = req.body.userName;
       const password = req.body.password;
-      if (!username || !password) {
+      if (!userName || !password) {
           return res.status(400).json(
               "username and password required"
           )
@@ -32,7 +32,7 @@ const checkPayload = (req, res, next) => {
   const checkUsernameExists = async (req, res, next) => {
     try {
         const userName = req.body.userName;
-        const user = await users.findByUserName(userName)
+        const user = await Auth.findByUserName(userName)
 
         if (!user) {
             return res.status(401).send({
