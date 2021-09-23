@@ -53,10 +53,17 @@ async function addItem(newItem){
   return getItemByItemId(itemId)
 };
 
+async function updateById(itemId, item){
+  await db("items").where("itemId", itemId).update(item);
+
+  return getItemByItemId(itemId)
+}
+
 
 
 module.exports = {
     getAllItems,
     getItemByItemId,
-    addItem
+    addItem,
+    updateById
 }

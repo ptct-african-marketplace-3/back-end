@@ -3,7 +3,8 @@ const express = require("express");
 const {
     getAllItems,
     getItemByItemId,
-    addItem
+    addItem,
+    updateById
 } = require("./items-model");
 const restricted = require("../middleware/restricted")
 
@@ -63,6 +64,25 @@ router.post("/", async (req, res) => {
     }catch(err){
         res.status(500).json({
             status: "Failed",
+            error: err.message,
+            stack: err.stack
+        })
+    }
+})
+
+router.put("/:itemId", async (req, res) => {
+
+    try{
+        const newDetails = await updateById(req.params.itemId, req.body);
+
+        res.json({
+            status: "Success",
+            details: newDetails
+        })
+    }catch(err){
+        res.status(500).json({
+            status: "Failed",
+            message: "Something went wrong",
             error: err.message,
             stack: err.stack
         })
