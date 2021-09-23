@@ -59,11 +59,18 @@ async function updateById(itemId, item){
   return getItemByItemId(itemId)
 }
 
+const deleteById = async (itemId) => {
+  const item = await getItemByItemId(itemId)
+  await db("items").where("itemId", itemId).delete();
+  return item
+}
+
 
 
 module.exports = {
     getAllItems,
     getItemByItemId,
     addItem,
-    updateById
+    updateById,
+    deleteById
 }

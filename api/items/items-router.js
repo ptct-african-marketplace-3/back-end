@@ -4,7 +4,8 @@ const {
     getAllItems,
     getItemByItemId,
     addItem,
-    updateById
+    updateById,
+    deleteById
 } = require("./items-model");
 const restricted = require("../middleware/restricted")
 
@@ -83,6 +84,22 @@ router.put("/:itemId", async (req, res) => {
         res.status(500).json({
             status: "Failed",
             message: "Something went wrong",
+            error: err.message,
+            stack: err.stack
+        })
+    }
+})
+
+router.delete("/:itemId", async (req, res) => {
+    try{
+        const response = await deleteById(req.params.itemId);
+        res.json({
+            status: "Success",
+            message: response
+        })
+    }catch(err){
+        res.status(500).json({
+            status: "Failed",
             error: err.message,
             stack: err.stack
         })
