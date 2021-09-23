@@ -37,8 +37,26 @@ const getAllItems = () => {
 
 }
 
+async function getItemByItemId(itemId){
+  const item = await db("items as i")
+  .join("owners as o", "o.ownerId", "i.ownerId")
+  .select("o.userName", "i.itemName", "i.itemDescription", "i.itemPrice", "i.itemId", "o.location", "o.ownerId")
+  .where("itemId", itemId)
+  .first();
+
+  return item;
+}
+
+async function addItem(newItem){
+  const [itemId] = await db("items as i").insert(newItem, "itemId")
+
+  return getItemByItemId(itemId)
+};
+
 
 
 module.exports = {
-    getAllItems
+    getAllItems,
+    getItemByItemId,
+    addItem
 }
