@@ -3,11 +3,13 @@ const express = require("express");
 const {
     getAllItems,
     getItemByItemId,
+    getOwnerItems,
     addItem,
     updateById,
     deleteById
 } = require("./items-model");
-const restricted = require("../middleware/restricted")
+const restricted = require("../middleware/restricted");
+const { reset } = require("nodemon");
 
 const router = express.Router();
 
@@ -43,6 +45,31 @@ router.get("/:itemId", async (req, res) => {
             status: "Failed",
             message: "Something went wrong.",
             error: err.message
+        })
+    }
+})
+
+router.get("/owner/:ownerId", async (req, res) => {
+    const items = await getOwnerItems(req.params.ownerId);
+
+    try{
+        if(!items){
+            res.status(404).json({
+                status: "Faile",
+                message: `No items found for user with ID of ${req.params.ownerId}`
+            })
+        }else{
+            res.json({
+                status: "Success",
+                items: items
+            })
+        }
+
+    }catch(err){
+        res.status(500).json({
+            status: "Failed",
+            error: err.message,
+            stack: err.stack
         })
     }
 })
