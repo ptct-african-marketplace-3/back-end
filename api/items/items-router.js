@@ -8,8 +8,6 @@ const {
     updateById,
     deleteById
 } = require("./items-model");
-const restricted = require("../middleware/restricted");
-const { reset } = require("nodemon");
 
 const router = express.Router();
 
