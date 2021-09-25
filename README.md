@@ -1,6 +1,11 @@
-/api/items 
-    GET returns list of full items
+/api/items
+[GET] returns list of all items
+[POST] creates new item.
 
-    *currently displaying dummy data
+/api/items/:itemId
+[GET] returns item with specified itemId.
+[PUT] Edits item with specified itemId.
+[DELETE] Deletes item with specified itemId.
 
-/api/users
+/api/items/owner/:ownerId
+[GET] returns all items listed by owner specified with ownerId
